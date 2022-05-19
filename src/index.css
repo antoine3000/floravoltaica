@@ -1,0 +1,53 @@
+@import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.main {
+  @apply p-4;
+}
+.header {
+  @apply mb-6;
+}
+.header__logo {
+  @apply block w-12 mb-2;
+}
+.header__title {
+  @apply text-3xl font-bold mb-1;
+}
+.header__desc {
+  @apply text-xl;
+}
+.select {
+  @apply mb-6;
+}
+.select label {
+  @apply block mb-2;
+}
+.select select {
+  @apply w-full mb-1 rounded;
+}
+.select span {
+  @apply block text-sm mb-2;
+}
+.kit .icon {
+  @apply mr-2 text-xl inline-block w-6 text-left;
+}
+.kit .name {
+  @apply font-bold mr-2;
+}
+.kit .value {
+  @apply mr-0.5;
+}
+.footer {
+  @apply mt-12;
+}
+.footer h2 {
+  @apply text-lg mb-6 underline underline-offset-8;
+}
+.partners {
+  @apply flex flex-row;
+}
+.partners__item {
+  @apply w-12 mr-4;
+}

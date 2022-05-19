@@ -1,0 +1,83 @@
+{
+  "sensorsSelection": [50, 55],
+  "sensors": [
+    {
+      "id": "113",
+      "icon": "smog",
+      "title": "Volatile organic compounds",
+      "desc": "custom desc"
+    },
+    {
+      "id": "112",
+      "icon": "smog",
+      "title": "CO2",
+      "desc": "custom desc"
+    },
+    {
+      "id": "14",
+      "icon": "sun",
+      "title": "Light",
+      "desc": "custom desc"
+    },
+    {
+      "id": "10",
+      "icon": "battery",
+      "title": "Battery",
+      "desc": "custom desc"
+    },
+    {
+      "id": "53",
+      "icon": "ear-listen",
+      "title": "Noise",
+      "desc": "custom desc"
+    },
+    {
+      "id": "58",
+      "icon": "chart-simple",
+      "title": "Barometric pressure",
+      "desc": "custom desc"
+    },
+    {
+      "id": "89",
+      "icon": "smog",
+      "title": "Air quality PM 1.0",
+      "desc": "custom desc"
+    },
+    {
+      "id": "88",
+      "icon": "smog",
+      "title": "Air quality PM 10",
+      "desc": "custom desc"
+    },
+    {
+      "id": "87",
+      "icon": "smog",
+      "title": "Air quality PM 2.5",
+      "desc": "custom desc"
+    },
+    {
+      "id": "55",
+      "icon": "thermometer-half",
+      "title": "Air temperature",
+      "desc": "custom desc"
+    },
+    {
+      "id": "56",
+      "icon": "droplet",
+      "title": "Humidity",
+      "desc": "custom desc"
+    },
+    {
+      "id": "50",
+      "icon": "water",
+      "title": "Soil moisture",
+      "desc": "custom desc"
+    },
+    {
+      "id": "133",
+      "icon": "battery",
+      "title": "Energy produced",
+      "desc": "custom desc"
+    }
+  ]
+}
