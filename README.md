@@ -1,6 +1,6 @@
-# template-vite-js-tailwind-v3
+# Floravoltaica x SmartCitizen
 
-- **template of:** vite + vanilaJS
+- **vite** + vanilaJS
 - **tailwindcss:** v3.x
 
 ## Started
