@@ -65,29 +65,57 @@ function displayKit(kit) {
       app.appendChild(elem);
     }
   }
+  let title = document.createElement("h1");
+  title.innerHTML = `Selection`;
+  app.appendChild(title);
   // chart
   for (let i in Settings.sensorsSelection) {
     let sensor = Settings.sensorsSelection[i];
     const sensorUrl = `https://api.smartcitizen.me/v0/devices/${mainKit}/readings?sensor_id=${sensor}&rollup=1h&from=${dateStart}&to=${dateEnd}`;
-    https: fetch(sensorUrl)
-    .then((res) => {
-      return res.json();
-    })
-    .then((sensor) => {
-      displayChart(sensor);
-      // TODO: Select second sensor
+    const sensorUrl2 = `https://api.smartcitizen.me/v0/devices/${mainKit}/readings?sensor_id=50&rollup=1h&from=${dateStart}&to=${dateEnd}`;
+
+    Promise.all([
+      fetch(sensorUrl),
+      fetch(sensorUrl2)
+    ]).then(function (responses) {
+      return Promise.all(responses.map(function (response) {
+        return response.json();
+      }));
+    }).then(function (sensor) {
+      displayChart(sensor[0], sensor[1]);
+    }).catch(function (error) {
+      console.log(error);
     });
+
+    // https: fetch(sensorUrl)
+    // .then((res) => {
+    //   return res.json();
+    // })
+    // .then((sensor) => {
+    //   console.log(sensor);
+    //   displayChart(sensor);
+    //   // TODO: Select second sensor
+    // });
+
   }
 }
 
-function displayChart(sensor) {
-  let dataStruct = [];
-  for (const reading of sensor.readings) {
+function displayChart(sensor1, sensor2) {
+  let sensor1DataStruct = [];
+  let sensor2DataStruct = [];
+  for (const reading of sensor1.readings) {
     let dataItem = {
       x: reading[0],
       y: reading[1],
     };
-    dataStruct.push(dataItem);
+    sensor1DataStruct.push(dataItem);
+  }
+  for (const reading of sensor2.readings) {
+    let dataItem = {
+      x: reading[0],
+      y: reading[1],
+    };
+    sensor2DataStruct.push(dataItem);
   }
   let chart = document.createElement("canvas");
   app.appendChild(chart);
@@ -95,13 +123,13 @@ function displayChart(sensor) {
     type: 'line',
     data: {
       datasets: [{
-        label: sensor.sensor_key,
-        data: dataStruct,
+        label: sensor1.sensor_key,
+        data: sensor1DataStruct,
         borderColor: "rgba(255, 0, 0, 1)",
         backgroundColor: "rgba(255, 0, 0, 0.3)"
       },{
-        label: 'Second',
-        data: dataStruct,
+        label: sensor2.sensor_key,
+        data: sensor2DataStruct,
         borderColor: "rgba(0, 0, 255, 1)",
         backgroundColor: "rgba(0, 0, 255, 0.3)"
       }]
