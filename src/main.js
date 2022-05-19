@@ -18,6 +18,7 @@ function select() {
     mainKit = event.target.value;
     getKit(mainKit)
   });
+  select.innerHTML = `<option value="">Please select a sensor kit</option>`;
   for (let i in Kits) {
     let opt = document.createElement('option');
     opt.value = Kits[i].id;
@@ -30,7 +31,7 @@ function getDates() {
   // get date
   dateEnd = new Date(new Date().getTime());
   dateStart = new Date(new Date().getTime());
-  dateStart.setDate(new Date().getDate() - 7);
+  dateStart.setDate(new Date().getDate() - 5);
   // format date
   dateStart = dateStart.toISOString().split('T')[0];
   dateEnd = dateEnd.toISOString().split('T')[0];
@@ -52,26 +53,29 @@ function displayKit(kit) {
   // sensors
   for (let i in kit.data.sensors) {
     let sensor = kit.data.sensors[i];
-    let elem = document.createElement("article");
-    elem.classList.add("kit");
-    elem.innerHTML =
-    `
-    <span class="name">${sensor.name}</span>
-    <span class="value">${sensor.value}</span>
-    <span class="unit">${sensor.unit}</span>
-    `
-    app.appendChild(elem);
+    if (sensor.value != null) {
+      let elem = document.createElement("article");
+      elem.classList.add("kit");
+      elem.innerHTML =
+      `
+      <span class="name">${sensor.name}</span>
+      <span class="value">${sensor.value}</span>
+      <span class="unit">${sensor.unit}</span>
+      `
+      app.appendChild(elem);
+    }
   }
   // chart
   for (let i in Settings.sensorsSelection) {
     let sensor = Settings.sensorsSelection[i];
-    const sensorUrl = `https://api.smartcitizen.me/v0/devices/${mainKit}/readings?sensor_id=${sensor}&rollup=4h&from=${dateStart}&to=${dateEnd}`;
+    const sensorUrl = `https://api.smartcitizen.me/v0/devices/${mainKit}/readings?sensor_id=${sensor}&rollup=1h&from=${dateStart}&to=${dateEnd}`;
     https: fetch(sensorUrl)
     .then((res) => {
       return res.json();
     })
     .then((sensor) => {
       displayChart(sensor);
+      // TODO: Select second sensor
     });
   }
 }
@@ -88,11 +92,18 @@ function displayChart(sensor) {
   let chart = document.createElement("canvas");
   app.appendChild(chart);
   const myChart = new Chart(chart, {
-    type: 'bar',
+    type: 'line',
     data: {
       datasets: [{
-        label: '# of Votes',
+        label: sensor.sensor_key,
         data: dataStruct,
+        borderColor: "rgba(255, 0, 0, 1)",
+        backgroundColor: "rgba(255, 0, 0, 0.3)"
+      },{
+        label: 'Second',
+        data: dataStruct,
+        borderColor: "rgba(0, 0, 255, 1)",
+        backgroundColor: "rgba(0, 0, 255, 0.3)"
       }]
     },
     options: {
