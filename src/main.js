@@ -6,7 +6,7 @@ import Litepicker from 'litepicker'
 
 
 const app = document.getElementById("app");
-let kitMain, dateStart, dateEnd;
+let kitMain, kitSecond, sensorSecond, dateStart, dateEnd;
 
 window.onload = function () {
   select();
@@ -100,25 +100,28 @@ function displaySensorSection(kit, sensorId) {
     select.appendChild(optgroup);
     for (let i in Settings.sensorsSelection) {
       let opt = document.createElement('option');
-      opt.value = Settings.sensorsSelection[i].id;
+      opt.value = Kits[i].id + '-' + Settings.sensorsSelection[i].id;
       opt.innerHTML = Settings.sensorsSelection[i].title;
       optgroup.appendChild(opt);
     }
   }
-  select.addEventListener('change', function(event) {
-    // TODO
-  });
-  selectSection.appendChild(select);
-  // chart
   let chartSection = document.createElement("section");
+  selectSection.appendChild(select);
+  select.addEventListener('change', function(event) {
+    let value = event.target.value;
+    kitSecond = value.split('-')[0];
+    sensorSecond = value.split('-')[1];
+    initCharts(chartSection, sensorId);
+  });
+  
   chartSection.classList.add('sensor__chart');
   sensorSection.appendChild(chartSection);
-  initCharts(sensorSection, chartSection, sensorId);
+  initCharts(chartSection, sensorId);
 }
 
-function initCharts(elemParent, elemSelf, sensor1, sensor2 = null) {
+function initCharts(elemSelf, sensor1) {
   let sensorUrl1 = `https://api.smartcitizen.me/v0/devices/${kitMain}/readings?sensor_id=${sensor1}&rollup=4h&from=${dateStart}&to=${dateEnd}`;
-  let sensorUrl2 = sensor2 ? `https://api.smartcitizen.me/v0/devices/${kitMain}/readings?sensor_id=${sensor2}&rollup=4h&from=${dateStart}&to=${dateEnd}` : sensorUrl1;
+  let sensorUrl2 = sensorSecond ? `https://api.smartcitizen.me/v0/devices/${kitSecond}/readings?sensor_id=${sensorSecond}&rollup=4h&from=${dateStart}&to=${dateEnd}` : sensorUrl1;
   Promise.all([
     fetch(sensorUrl1),
     fetch(sensorUrl2)
@@ -127,13 +130,13 @@ function initCharts(elemParent, elemSelf, sensor1, sensor2 = null) {
       return response.json();
     }));
   }).then(function (sensor) {
-    displayChart(elemSelf, sensor[0], sensor[1], sensor2);
+    displayChart(elemSelf, sensor[0], sensor[1]);
   }).catch(function (error) {
     console.log(error);
   });
 }
 
-function displayChart(elemSelf, sensor1, sensor2, isSensor2) {
+function displayChart(elemSelf, sensor1, sensor2) {
   // dom structure
   if (elemSelf) elemSelf.innerHTML = '';
   let chart = document.createElement("canvas");
@@ -159,8 +162,7 @@ function displayChart(elemSelf, sensor1, sensor2, isSensor2) {
   sensor2DataStruct.reverse();
   // chart data
   let chartData;
-  if (isSensor2) {
-    console.log('sensor');
+  if (sensorSecond) {
     chartData = {
       datasets: [{
         label: sensor1.sensor_key,
@@ -175,7 +177,6 @@ function displayChart(elemSelf, sensor1, sensor2, isSensor2) {
       }]
     }
   } else {
-    console.log('no sensor');
     chartData = {
       datasets: [{
         label: sensor1.sensor_key,
