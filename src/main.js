@@ -60,31 +60,89 @@ function displayKit(kit) {
   title.innerHTML = `Selection`;
   app.appendChild(title);
   getDates();
-  initCharts();  
+  for (let i in Settings.sensorsSelection) {
+    displaySensorSection(kit, Settings.sensorsSelection[i]);
+  }
 }
 
-function initCharts() {
-  const canvas = document.querySelectorAll('canvas');
-  for (var i = 0; i < canvas.length; i++) {
-    canvas[i].remove()
+function displaySensorSection(kit, sensorId) {
+  let sectionId = kit.id + "_" + sensorId;
+  // Section
+  let sensorSection = document.createElement("section");
+  sensorSection.id = sectionId;
+  sensorSection.classList.add('sensor__section');
+  app.appendChild(sensorSection);
+  // Chart section
+  let chartSection = document.createElement("section");
+  chartSection.classList.add('sensor__chart');
+  sensorSection.appendChild(chartSection);
+  initCharts(sensorSection, chartSection, sensorId);
+}
+
+function initCharts(elemParent, elemSelf, sensor1) {
+  const sensorUrl1 = `https://api.smartcitizen.me/v0/devices/${kitMain}/readings?sensor_id=${sensor1}&rollup=4h&from=${dateStart}&to=${dateEnd}`;
+  const sensorUrl2 = `https://api.smartcitizen.me/v0/devices/${kitMain}/readings?sensor_id=50&rollup=4h&from=${dateStart}&to=${dateEnd}`;
+  Promise.all([
+    fetch(sensorUrl1),
+    fetch(sensorUrl2)
+  ]).then(function (responses) {
+    return Promise.all(responses.map(function (response) {
+      return response.json();
+    }));
+  }).then(function (sensor) {
+    displayChart(elemSelf, sensor[0], sensor[1]);
+  }).catch(function (error) {
+    console.log(error);
+  });
+}
+
+function displayChart(elemSelf, sensor1, sensor2) {
+  // dom structure
+  if (elemSelf) elemSelf.innerHTML = '';
+  let chart = document.createElement("canvas");
+  elemSelf.appendChild(chart);
+  // sensor data
+  let sensor1DataStruct = [];
+  let sensor2DataStruct = [];
+  for (const reading of sensor1.readings) {
+    let dataItem = {
+      x: reading[0],
+      y: reading[1],
+    };
+    sensor1DataStruct.push(dataItem);
   }
-  for (let i in Settings.sensorsSelection) {
-    let sensor = Settings.sensorsSelection[i];
-    const sensorUrl1 = `https://api.smartcitizen.me/v0/devices/${kitMain}/readings?sensor_id=${sensor}&rollup=4h&from=${dateStart}&to=${dateEnd}`;
-    const sensorUrl2 = `https://api.smartcitizen.me/v0/devices/${kitMain}/readings?sensor_id=50&rollup=4h&from=${dateStart}&to=${dateEnd}`;
-    Promise.all([
-      fetch(sensorUrl1),
-      fetch(sensorUrl2)
-    ]).then(function (responses) {
-      return Promise.all(responses.map(function (response) {
-        return response.json();
-      }));
-    }).then(function (sensor) {
-      displayChart(sensor[0], sensor[1]);
-    }).catch(function (error) {
-      console.log(error);
-    });
+  sensor1DataStruct.reverse();
+  for (const reading of sensor2.readings) {
+    let dataItem = {
+      x: reading[0],
+      y: reading[1],
+    };
+    sensor2DataStruct.push(dataItem);
   }
+  sensor2DataStruct.reverse();
+  const myChart = new Chart(chart, {
+    type: 'line',
+    data: {
+      datasets: [{
+        label: sensor1.sensor_key,
+        data: sensor1DataStruct,
+        borderColor: "rgba(255, 0, 0, 1)",
+        backgroundColor: "rgba(255, 0, 0, 0.3)"
+      },{
+        label: sensor2.sensor_key,
+        data: sensor2DataStruct,
+        borderColor: "rgba(0, 0, 255, 1)",
+        backgroundColor: "rgba(0, 0, 255, 0.3)"
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
 }
 
 function getDates() {
@@ -118,53 +176,6 @@ function getDates() {
         dateEnd = date2.dateInstance.toISOString().split('T')[0];
         initCharts();
       });
-    }
-  });
-}
-
-
-function displayChart(sensor1, sensor2) {
-  let sensor1DataStruct = [];
-  let sensor2DataStruct = [];
-  for (const reading of sensor1.readings) {
-    let dataItem = {
-      x: reading[0],
-      y: reading[1],
-    };
-    sensor1DataStruct.push(dataItem);
-  }
-  sensor1DataStruct.reverse();
-  for (const reading of sensor2.readings) {
-    let dataItem = {
-      x: reading[0],
-      y: reading[1],
-    };
-    sensor2DataStruct.push(dataItem);
-  }
-  sensor2DataStruct.reverse();
-  let chart = document.createElement("canvas");
-  app.appendChild(chart);
-  const myChart = new Chart(chart, {
-    type: 'line',
-    data: {
-      datasets: [{
-        label: sensor1.sensor_key,
-        data: sensor1DataStruct,
-        borderColor: "rgba(255, 0, 0, 1)",
-        backgroundColor: "rgba(255, 0, 0, 0.3)"
-      },{
-        label: sensor2.sensor_key,
-        data: sensor2DataStruct,
-        borderColor: "rgba(0, 0, 255, 1)",
-        backgroundColor: "rgba(0, 0, 255, 0.3)"
-      }]
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
     }
   });
 }
