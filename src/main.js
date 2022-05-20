@@ -1,22 +1,23 @@
 import './index.css'
 import Settings from './api/settings.json'
 import Kits from './api/kits.json'
-import Chart from 'chart.js/auto';
+import Chart from 'chart.js/auto'
+import Litepicker from 'litepicker'
+
 
 const app = document.getElementById("app");
-let mainKit, dateStart, dateEnd;
+let kitMain, dateStart, dateEnd;
 
 window.onload = function () {
   select();
-  getDates();
 };
 
 function select() {
   // select
   let select = document.getElementById('select');
   if (select) select.addEventListener('change', function(event) {
-    mainKit = event.target.value;
-    getKit(mainKit)
+    kitMain = event.target.value;
+    getKit(kitMain)
   });
   select.innerHTML = `<option value="">Please select a sensor kit</option>`;
   for (let i in Kits) {
@@ -25,16 +26,6 @@ function select() {
     opt.innerHTML = Kits[i].name;
     select.appendChild(opt);
   }
-}
-
-function getDates() {
-  // get date
-  dateEnd = new Date(new Date().getTime());
-  dateStart = new Date(new Date().getTime());
-  dateStart.setDate(new Date().getDate() - 5);
-  // format date
-  dateStart = dateStart.toISOString().split('T')[0];
-  dateEnd = dateEnd.toISOString().split('T')[0];
 }
 
 function getKit(id) {
@@ -68,14 +59,21 @@ function displayKit(kit) {
   let title = document.createElement("h1");
   title.innerHTML = `Selection`;
   app.appendChild(title);
-  // chart
+  getDates();
+  initCharts();  
+}
+
+function initCharts() {
+  const canvas = document.querySelectorAll('canvas');
+  for (var i = 0; i < canvas.length; i++) {
+    canvas[i].remove()
+  }
   for (let i in Settings.sensorsSelection) {
     let sensor = Settings.sensorsSelection[i];
-    const sensorUrl = `https://api.smartcitizen.me/v0/devices/${mainKit}/readings?sensor_id=${sensor}&rollup=1h&from=${dateStart}&to=${dateEnd}`;
-    const sensorUrl2 = `https://api.smartcitizen.me/v0/devices/${mainKit}/readings?sensor_id=50&rollup=1h&from=${dateStart}&to=${dateEnd}`;
-
+    const sensorUrl1 = `https://api.smartcitizen.me/v0/devices/${kitMain}/readings?sensor_id=${sensor}&rollup=4h&from=${dateStart}&to=${dateEnd}`;
+    const sensorUrl2 = `https://api.smartcitizen.me/v0/devices/${kitMain}/readings?sensor_id=50&rollup=4h&from=${dateStart}&to=${dateEnd}`;
     Promise.all([
-      fetch(sensorUrl),
+      fetch(sensorUrl1),
       fetch(sensorUrl2)
     ]).then(function (responses) {
       return Promise.all(responses.map(function (response) {
@@ -86,19 +84,44 @@ function displayKit(kit) {
     }).catch(function (error) {
       console.log(error);
     });
-
-    // https: fetch(sensorUrl)
-    // .then((res) => {
-    //   return res.json();
-    // })
-    // .then((sensor) => {
-    //   console.log(sensor);
-    //   displayChart(sensor);
-    //   // TODO: Select second sensor
-    // });
-
   }
 }
+
+function getDates() {
+  // get date
+  dateEnd = new Date(new Date().getTime());
+  dateStart = new Date(new Date().getTime());
+  dateStart.setDate(new Date().getDate() - 10);
+  // format date
+  dateStart = dateStart.toISOString().split('T')[0];
+  dateEnd = dateEnd.toISOString().split('T')[0];
+  // range picker
+  let picker = document.createElement("input");
+  picker.id = "datepicker";
+  picker.type = "text";
+  app.appendChild(picker);
+  new Litepicker({
+    element: picker,
+    singleMode: false,
+    startDate: dateStart,
+    endDate: dateEnd,
+    tooltipText: {
+      one: 'day',
+      other: 'days'
+    },
+    tooltipNumber: (totalDays) => {
+      return totalDays - 1;
+    },
+    setup: (picker) => {
+      picker.on('selected', (date1, date2) => {
+        dateStart = date1.dateInstance.toISOString().split('T')[0];
+        dateEnd = date2.dateInstance.toISOString().split('T')[0];
+        initCharts();
+      });
+    }
+  });
+}
+
 
 function displayChart(sensor1, sensor2) {
   let sensor1DataStruct = [];
@@ -110,6 +133,7 @@ function displayChart(sensor1, sensor2) {
     };
     sensor1DataStruct.push(dataItem);
   }
+  sensor1DataStruct.reverse();
   for (const reading of sensor2.readings) {
     let dataItem = {
       x: reading[0],
@@ -117,6 +141,7 @@ function displayChart(sensor1, sensor2) {
     };
     sensor2DataStruct.push(dataItem);
   }
+  sensor2DataStruct.reverse();
   let chart = document.createElement("canvas");
   app.appendChild(chart);
   const myChart = new Chart(chart, {

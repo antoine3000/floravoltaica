@@ -42,6 +42,22 @@
 #app h1 {
   @apply text-lg mt-4 mb-4 underline underline-offset-8;
 }
+#datepicker {
+  @apply rounded w-full;
+}
+.litepicker {
+  @apply w-full;
+}
+.litepicker .container__days .day-item {
+  @apply hover:border-indigo-500 hover:text-white hover:shadow-none;
+}
+.litepicker .container__days .day-item.is-in-range {
+  @apply bg-indigo-300;
+}
+.litepicker .container__days .day-item.is-start-date,
+.litepicker .container__days .day-item.is-end-date {
+  @apply bg-indigo-500;
+}
 .footer {
   @apply mt-12;
 }
