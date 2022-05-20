@@ -74,12 +74,39 @@ function displaySensorSection(kit, sensorId) {
   if (document.getElementById(sectionId)) {
     document.getElementById(sectionId).remove();  
   }
-  // Section
+  // section
   let sensorSection = document.createElement("section");
   sensorSection.id = sectionId;
   sensorSection.classList.add('sensor__section');
   app.appendChild(sensorSection);
-  // Chart section
+  // info
+  let infoSection = document.createElement("section");
+  sensorSection.innerHTML =
+  `
+  <section class="sensor__info">
+    <h1>Title</h1>
+    <p>Description</p>
+  </section>
+  `;
+  // select second sensor
+  let selectSection = document.createElement("section");
+  selectSection.classList.add('sensor__select');
+  sensorSection.appendChild(selectSection);
+  let select = document.createElement("select");
+  select.innerHTML = `<option value="">Please select a sensor kit</option>`;
+  for (let i in Kits) {
+    let optgroup = document.createElement('optgroup');
+    optgroup.label = Kits[i].name;
+    select.appendChild(optgroup);
+    for (let i in Settings.sensorsSelection) {
+      let opt = document.createElement('option');
+      opt.value = Settings.sensorsSelection[i];
+      opt.innerHTML = Settings.sensorsSelection[i];
+      optgroup.appendChild(opt);
+    }
+  }
+  selectSection.appendChild(select);
+  // chart
   let chartSection = document.createElement("section");
   chartSection.classList.add('sensor__chart');
   sensorSection.appendChild(chartSection);
@@ -105,7 +132,6 @@ function initCharts(elemParent, elemSelf, sensor1) {
 
 function displayChart(elemSelf, sensor1, sensor2) {
   // dom structure
-  console.log(elemSelf);
   if (elemSelf) elemSelf.innerHTML = '';
   let chart = document.createElement("canvas");
   elemSelf.appendChild(chart);
