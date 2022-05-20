@@ -1,5 +1,18 @@
 {
-  "sensorsSelection": [50, 55],
+  "sensorsSelection": [
+    {
+      "id": "50",
+      "icon": "smog",
+      "title": "Soil moisture",
+      "desc": "custom desc"
+    },
+    {
+      "id": "55",
+      "icon": "smog",
+      "title": "temperature",
+      "desc": "custom desc"
+    }
+  ],
   "sensors": [
     {
       "id": "113",
