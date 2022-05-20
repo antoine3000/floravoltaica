@@ -59,7 +59,11 @@ function displayKit(kit) {
   let title = document.createElement("h1");
   title.innerHTML = `Selection`;
   app.appendChild(title);
-  getDates();
+  getDates(kit);
+  displaySensorSections(kit);
+}
+
+function displaySensorSections(kit) {
   for (let i in Settings.sensorsSelection) {
     displaySensorSection(kit, Settings.sensorsSelection[i]);
   }
@@ -67,6 +71,9 @@ function displayKit(kit) {
 
 function displaySensorSection(kit, sensorId) {
   let sectionId = kit.id + "_" + sensorId;
+  if (document.getElementById(sectionId)) {
+    document.getElementById(sectionId).remove();  
+  }
   // Section
   let sensorSection = document.createElement("section");
   sensorSection.id = sectionId;
@@ -98,6 +105,7 @@ function initCharts(elemParent, elemSelf, sensor1) {
 
 function displayChart(elemSelf, sensor1, sensor2) {
   // dom structure
+  console.log(elemSelf);
   if (elemSelf) elemSelf.innerHTML = '';
   let chart = document.createElement("canvas");
   elemSelf.appendChild(chart);
@@ -145,7 +153,7 @@ function displayChart(elemSelf, sensor1, sensor2) {
   });
 }
 
-function getDates() {
+function getDates(kit) {
   // get date
   dateEnd = new Date(new Date().getTime());
   dateStart = new Date(new Date().getTime());
@@ -174,7 +182,7 @@ function getDates() {
       picker.on('selected', (date1, date2) => {
         dateStart = date1.dateInstance.toISOString().split('T')[0];
         dateEnd = date2.dateInstance.toISOString().split('T')[0];
-        initCharts();
+        displaySensorSections(kit);
       });
     }
   });
