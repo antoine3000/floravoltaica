@@ -3,6 +3,7 @@ import Settings from './api/settings.json'
 import Kits from './api/kits.json'
 import Chart from 'chart.js/auto'
 import Litepicker from 'litepicker'
+import 'chartjs-adapter-moment'
 
 
 const app = document.getElementById("app");
@@ -19,28 +20,28 @@ function select() {
     kitMain = event.target.value;
     getKit(kitMain)
   });
-  select.innerHTML = `<option value="">Please select a sensor kit</option>`;
-  for (let i in Kits) {
-    let opt = document.createElement('option');
-    opt.value = Kits[i].id;
-    opt.innerHTML = Kits[i].name;
-    select.appendChild(opt);
+    select.innerHTML = `<option value="">Please select a sensor kit</option>`;
+    for (let i in Kits) {
+      let opt = document.createElement('option');
+      opt.value = Kits[i].id;
+      opt.innerHTML = Kits[i].name;
+      select.appendChild(opt);
+    }
   }
-}
 
-function getKit(id) {
-  const kitUrl = `https://api.smartcitizen.me/v0/devices/${id}`;
-  https: fetch(kitUrl)
-  .then((res) => {
-    return res.json();
-  })
-  .then((kit) => {
-    displayKit(kit);
-  });
-}
+  function getKit(id) {
+    const kitUrl = `https://api.smartcitizen.me/v0/devices/${id}`;
+    https: fetch(kitUrl)
+    .then((res) => {
+      return res.json();
+    })
+    .then((kit) => {
+      displayKit(kit);
+    });
+  }
 
-function displayKit(kit) {
-  app.innerHTML = "";
+  function displayKit(kit) {
+    app.innerHTML = "";
   // sensors
   for (let i in kit.data.sensors) {
     let sensor = kit.data.sensors[i];
@@ -49,8 +50,8 @@ function displayKit(kit) {
       elem.classList.add("kit");
       elem.innerHTML =
       `
-      <span class="name">${sensor.name}</span>
-      <span class="value">${sensor.value}</span>
+      <span class="name">${sensorName(sensor.name, sensor.id)}</span>
+      <span class="value">${roundUp(sensor.value, 1)}</span>
       <span class="unit">${sensor.unit}</span>
       `
       app.appendChild(elem);
@@ -84,8 +85,8 @@ function displaySensorSection(kit, sensorId) {
   sensorSection.innerHTML =
   `
   <section class="sensor__info">
-    <h1>Title</h1>
-    <p>Description</p>
+  <h1>Title</h1>
+  <p>Description</p>
   </section>
   `;
   // select second sensor
@@ -125,18 +126,18 @@ function initCharts(elemSelf, sensor1) {
   Promise.all([
     fetch(sensorUrl1),
     fetch(sensorUrl2)
-  ]).then(function (responses) {
-    return Promise.all(responses.map(function (response) {
-      return response.json();
-    }));
-  }).then(function (sensor) {
-    displayChart(elemSelf, sensor[0], sensor[1]);
-  }).catch(function (error) {
-    console.log(error);
-  });
-}
+    ]).then(function (responses) {
+      return Promise.all(responses.map(function (response) {
+        return response.json();
+      }));
+    }).then(function (sensor) {
+      displayChart(elemSelf, sensor[0], sensor[1]);
+    }).catch(function (error) {
+      console.log(error);
+    });
+  }
 
-function displayChart(elemSelf, sensor1, sensor2) {
+  function displayChart(elemSelf, sensor1, sensor2) {
   // dom structure
   if (elemSelf) elemSelf.innerHTML = '';
   let chart = document.createElement("canvas");
@@ -165,12 +166,12 @@ function displayChart(elemSelf, sensor1, sensor2) {
   if (sensorSecond) {
     chartData = {
       datasets: [{
-        label: sensor1.sensor_key,
+        label: sensorName(sensor1.sensor_key, sensor1.sensor_id),
         data: sensor1DataStruct,
         borderColor: "rgba(255, 0, 0, 1)",
         backgroundColor: "rgba(255, 0, 0, 0.3)"
       },{
-        label: sensor2.sensor_key,
+        label: sensorName(sensor2.sensor_key, sensor2.sensor_id),
         data: sensor2DataStruct,
         borderColor: "rgba(0, 0, 255, 1)",
         backgroundColor: "rgba(0, 0, 255, 0.3)"
@@ -179,7 +180,7 @@ function displayChart(elemSelf, sensor1, sensor2) {
   } else {
     chartData = {
       datasets: [{
-        label: sensor1.sensor_key,
+        label: sensorName(sensor1.sensor_key, sensor1.sensor_id),
         data: sensor1DataStruct,
         borderColor: "rgba(255, 0, 0, 1)",
         backgroundColor: "rgba(255, 0, 0, 0.3)"
@@ -190,13 +191,36 @@ function displayChart(elemSelf, sensor1, sensor2) {
     type: 'line',
     data: chartData,
     options: {
+      animation: false,
       scales: {
         y: {
           beginAtZero: true
+        },
+        x: {
+          type: 'time',
+          time: {
+            unit: 'day'
+          }
         }
       }
     }
   });
+}
+
+function sensorName(name, id) {
+  let nameNew = Settings.sensors.filter(function(elem){
+    if (id == elem.id && elem.title.length > 0)  return elem.title
+  });
+  if (nameNew.length > 0) {
+    return nameNew[0].title
+  } else {
+    return name
+  }
+}
+
+function roundUp(num, precision) {
+  precision = Math.pow(10, precision)
+  return Math.ceil(num * precision) / precision
 }
 
 function getDates(kit) {
