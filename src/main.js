@@ -20,7 +20,7 @@ function select() {
     kitMain = event.target.value;
     getKit(kitMain)
   });
-  select.innerHTML = `<option value="">Please select a sensor kit</option>`;
+  select.innerHTML = `<option value="">Select a sensor kit</option>`;
   for (let i in Kits) {
     let opt = document.createElement('option');
     opt.value = Kits[i].id;
@@ -49,8 +49,8 @@ function displayKit(kit) {
   `
   <h1>${kitName(kit.name, kit.id)}</h1>
   <p>${kitDescription(kit.id)}</p>
-  <h5>Last data received: <span>${last_update}</span></h5>
-  <h2>Instant values</h2>
+  <h2>Last data capture</h2>
+  <h5>Received: <span>${last_update}</span></h5>
   `
   app.appendChild(elem);
   // sensors
@@ -68,9 +68,14 @@ function displayKit(kit) {
       elem.appendChild(elemSensor);
     }
   }
-  let title = document.createElement("h1");
-  title.innerHTML = `Selection`;
-  app.appendChild(title);
+  let dataTtitle = document.createElement("section");
+  dataTtitle.classList.add("data-title");
+  dataTtitle.innerHTML =
+  `
+  <h1>Data visualization</h1>
+  <label>Select a date range</label>
+  `;
+  app.appendChild(dataTtitle);
   getDates(kit);
   displaySensorSections(kit);
 }
@@ -96,16 +101,20 @@ function displaySensorSection(kit, sensorId) {
   sensorSection.innerHTML =
   `
   <section class="sensor__info">
-  <h1>${sensorName(sensorId, sensorId)}</h1>
+  <h2>${sensorName(sensorId, sensorId)}</h2>
   <p>${sensorDescription(sensorId)}</p>
   </section>
   `;
   // select second sensor
+  let selectLabel = document.createElement("label");
+  selectLabel.classList.add('select__label');
+  selectLabel.innerHTML = `Select a sensor for comparison`;
+  sensorSection.appendChild(selectLabel);
   let selectSection = document.createElement("section");
   selectSection.classList.add('sensor__select');
   sensorSection.appendChild(selectSection);
   let select = document.createElement("select");
-  select.innerHTML = `<option value="">Please select a sensor kit</option>`;
+  select.innerHTML = `<option value="">Select a sensor for comparison</option>`;
 
   for (let i in Kits) {
     let optgroup = document.createElement('optgroup');
@@ -180,7 +189,7 @@ function initCharts(elemSelf, sensor1) {
     chartInfo.innerHTML =
     `
     <section class="sensor__info">
-    <h1>${sensorName(sensor2.sensor_id, sensor2.sensor_id)}</h1>
+    <h2>& ${sensorName(sensor2.sensor_id, sensor2.sensor_id)}</h2>
     <p>${sensorDescription(sensor2.sensor_id)}</p>
     </section>
     `;
@@ -221,8 +230,8 @@ function initCharts(elemSelf, sensor1) {
       {
         label: sensorName(sensor2.sensor_key, sensor2.sensor_id),
         data: sensor2DataStruct,
-        borderColor: "rgba(255, 0, 0, 1)",
-        backgroundColor: "rgba(255, 0, 0, 1)",
+        borderColor: "#1D4ED8",
+        backgroundColor: "#1D4ED8",
         yAxisID: 'y1',
       }]
     }
@@ -341,6 +350,8 @@ function getDates(kit) {
   new Litepicker({
     element: picker,
     singleMode: false,
+    autoApply: true,
+    delimiter: " → ",
     startDate: dateStart,
     endDate: dateEnd,
     tooltipText: {

@@ -2,17 +2,19 @@
   "sensorsSelection": [
     {
       "id": "50",
-      "icon": "smog",
-      "title": "Soil moisture",
-      "desc": "custom desc",
-      "color": "rgba(255, 0, 255, 1)"
+      "color": "#4ADE80"
     },
     {
       "id": "55",
-      "icon": "smog",
-      "title": "temperature",
-      "desc": "custom desc",
-      "color": "rgba(255, 255, 0, 1)"
+      "color": "#14532D"
+    },
+    {
+      "id": "14",
+      "color": "#22D3EE"
+    },
+    {
+      "id": "10",
+      "color": "#164E63"
     }
   ],
   "sensors": [
@@ -86,13 +88,13 @@
       "id": "50",
       "icon": "water",
       "title": "Soil moisture",
-      "desc": "custom desc"
+      "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
     },
     {
       "id": "133",
       "icon": "battery",
       "title": "Energy produced",
-      "desc": "custom desc"
+      "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
     }
   ]
 }

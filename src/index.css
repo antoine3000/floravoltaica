@@ -5,31 +5,40 @@
 
 body {
   @apply block !important;
+  @apply text-stone-100 bg-emerald-900;
+}
+
+.main {
+  @apply flex flex-col min-h-screen;
+}
+.main .footer {
+  @apply mt-auto;
+  @apply py-8;
 }
 
 .header, .select, #app, .footer {
   @apply px-12;
 }
 .header {
-  @apply py-6;
+  @apply py-6; 
 }
 .header__logo {
   @apply block w-12 mb-2;
 }
 .header__title {
-  @apply text-6xl font-bold mb-6;
+  @apply text-6xl font-bold mb-6 max-w-screen-md;
 }
 .header__desc {
-  @apply text-lg max-w-screen-md mb-1;
+  @apply text-lg mb-1 max-w-screen-md;
 }
 .select {
   @apply pb-8;
 }
-.select label {
-  @apply block mb-2 uppercase text-xs tracking-wide;
+label {
+  @apply block mb-2 uppercase text-xs tracking-wide max-w-screen-md;
 }
 .select select {
-  @apply w-full mb-1 rounded-lg text-black border-black;
+  @apply w-full mb-1 rounded text-emerald-900 max-w-screen-md;
 }
 .select span {
   @apply block text-sm mb-2;
@@ -43,24 +52,54 @@ body {
 .kit .value {
   @apply mr-0.5;
 }
+canvas {
+  @apply mt-6;
+}
 #app {
-  @apply bg-neutral-800 text-white;
+  @apply bg-stone-300 text-emerald-900;
 }
 #app .kit > h1 {
   @apply text-6xl font-bold mb-4 pt-8;
+  @apply max-w-screen-md;
 }
 #app .kit > h2 {
-  @apply text-4xl font-bold mb-4;
+  @apply text-4xl font-bold mb-4 mt-8;
+  @apply max-w-screen-md;
 }
 #app .kit > p {
-  @apply text-lg max-w-screen-md mb-4;
+  @apply text-lg mb-4;
+  @apply max-w-screen-md;
 }
 #app .kit > h5 {
   @apply font-mono text-xs uppercase tracking-wide mb-6;
+  @apply max-w-screen-md;
 }
-/*.kit__sensor {
-  &
-}*/
+.sensor__section {
+  @apply border-t-2 border-emerald-900 mt-12;
+}
+.sensor__section:last-child {
+  @apply pb-12;
+}
+.kit__sensor {
+  @apply font-mono;
+  @apply max-w-screen-md;
+  @apply border-b border-dotted border-b-2 border-emerald-900 pb-2 mb-2;
+  @apply flex;
+}
+.kit__sensor .name {
+  @apply mr-auto;
+}
+.data-title {
+  @apply mt-8;
+  @apply max-w-screen-md;
+}
+.select__label {
+  @apply mt-4;
+}
+.sensor__select select {
+  @apply w-full rounded;
+  @apply max-w-screen-md;
+}
 #datepicker {
   @apply rounded w-full;
 }
@@ -68,14 +107,32 @@ body {
   @apply w-full;
 }
 .litepicker .container__days .day-item {
-  @apply hover:border-indigo-500 hover:text-white hover:shadow-none;
+  @apply hover:border-emerald-900 hover:text-white hover:shadow-none;
 }
 .litepicker .container__days .day-item.is-in-range {
-  @apply bg-indigo-300;
+  @apply bg-emerald-400;
 }
 .litepicker .container__days .day-item.is-start-date,
 .litepicker .container__days .day-item.is-end-date {
-  @apply bg-indigo-500;
+  @apply bg-emerald-800;
+}
+.litepicker .container__tooltip {
+  @apply text-emerald-900;
+}
+#app h1 {
+  @apply text-4xl font-bold mb-4 mt-6;
+  @apply max-w-screen-md;
+}
+#app input {
+  @apply max-w-screen-md rounded;
+}
+.sensor__info h2 {
+  @apply text-2xl font-bold mb-2 mt-6;
+  @apply max-w-screen-md;
+}
+.sensor__info p {
+  @apply text-sm;
+  @apply max-w-screen-md;
 }
 .footer {
   @apply mt-auto;
