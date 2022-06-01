@@ -48,7 +48,8 @@ function displayKit(kit) {
   elem.innerHTML =
   `
   <h1>${kitName(kit.name, kit.id)}</h1>
-  <h2>Last data received: <span>${last_update}</span></h2>
+  <h2>${kitDescription(kit.id)}</h2>
+  <h3>Last data received: <span>${last_update}</span></h3>
   `
   app.appendChild(elem);
   // sensors
@@ -213,12 +214,15 @@ function initCharts(elemSelf, sensor1) {
         label: sensorName(sensor1.sensor_key, sensor1.sensor_id),
         data: sensor1DataStruct,
         borderColor: "rgba(255, 0, 0, 1)",
-        backgroundColor: "rgba(255, 0, 0, 0.3)"
-      },{
+        backgroundColor: "rgba(255, 0, 0, 0.3)",
+        yAxisID: 'y',
+      },
+      {
         label: sensorName(sensor2.sensor_key, sensor2.sensor_id),
         data: sensor2DataStruct,
         borderColor: "rgba(0, 0, 255, 1)",
-        backgroundColor: "rgba(0, 0, 255, 0.3)"
+        backgroundColor: "rgba(0, 0, 255, 0.3)",
+        yAxisID: 'y1',
       }]
     }
   } else {
@@ -227,7 +231,8 @@ function initCharts(elemSelf, sensor1) {
         label: sensorName(sensor1.sensor_key, sensor1.sensor_id),
         data: sensor1DataStruct,
         borderColor: "rgba(255, 0, 0, 1)",
-        backgroundColor: "rgba(255, 0, 0, 0.3)"
+        backgroundColor: "rgba(255, 0, 0, 0.3)",
+        yAxisID: 'y',
       }]
     }
   }
@@ -235,10 +240,30 @@ function initCharts(elemSelf, sensor1) {
     type: 'line',
     data: chartData,
     options: {
-      animation: false,
+      responsive: true,
+      interaction: {
+        mode: 'index',
+        intersect: false,
+      },
+      stacked: false,
       scales: {
         y: {
-          beginAtZero: true
+          type: 'linear',
+          display: true,
+          position: 'left',
+          title: {
+            display: true,
+            text: sensorName(sensor1.sensor_key, sensor1.sensor_id),
+          }
+        },
+        y1: {
+          type: 'linear',
+          display: true,
+          position: 'right',  
+          title: {
+            display: true,
+            text: sensorName(sensor2.sensor_key, sensor2.sensor_id),
+          },
         },
         x: {
           type: 'time',
@@ -278,6 +303,13 @@ function kitName(name, id) {
   } else {
     return name
   }
+}
+
+function kitDescription(id) {
+  let descNew = Kits.filter(function(elem){
+    if (id == elem.id && elem.desc.length > 0)  return elem.desc
+  });
+  return descNew[0].desc
 }
 
 function roundUp(num, precision) {
