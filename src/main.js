@@ -20,28 +20,28 @@ function select() {
     kitMain = event.target.value;
     getKit(kitMain)
   });
-    select.innerHTML = `<option value="">Please select a sensor kit</option>`;
-    for (let i in Kits) {
-      let opt = document.createElement('option');
-      opt.value = Kits[i].id;
-      opt.innerHTML = Kits[i].name;
-      select.appendChild(opt);
-    }
+  select.innerHTML = `<option value="">Please select a sensor kit</option>`;
+  for (let i in Kits) {
+    let opt = document.createElement('option');
+    opt.value = Kits[i].id;
+    opt.innerHTML = Kits[i].name;
+    select.appendChild(opt);
   }
+}
 
-  function getKit(id) {
-    const kitUrl = `https://api.smartcitizen.me/v0/devices/${id}`;
-    https: fetch(kitUrl)
-    .then((res) => {
-      return res.json();
-    })
-    .then((kit) => {
-      displayKit(kit);
-    });
-  }
+function getKit(id) {
+  const kitUrl = `https://api.smartcitizen.me/v0/devices/${id}`;
+  https: fetch(kitUrl)
+  .then((res) => {
+    return res.json();
+  })
+  .then((kit) => {
+    displayKit(kit);
+  });
+}
 
-  function displayKit(kit) {
-    app.innerHTML = "";
+function displayKit(kit) {
+  app.innerHTML = "";
   // sensors
   for (let i in kit.data.sensors) {
     let sensor = kit.data.sensors[i];
@@ -95,17 +95,30 @@ function displaySensorSection(kit, sensorId) {
   sensorSection.appendChild(selectSection);
   let select = document.createElement("select");
   select.innerHTML = `<option value="">Please select a sensor kit</option>`;
+
   for (let i in Kits) {
     let optgroup = document.createElement('optgroup');
     optgroup.label = Kits[i].name;
     select.appendChild(optgroup);
-    for (let i in Settings.sensorsSelection) {
-      let opt = document.createElement('option');
-      opt.value = Kits[i].id + '-' + Settings.sensorsSelection[i].id;
-      opt.innerHTML = Settings.sensorsSelection[i].title;
-      optgroup.appendChild(opt);
-    }
+    let kitUrl = `https://api.smartcitizen.me/v0/devices/${Kits[i].id}`;
+    // sublist
+    https: fetch(kitUrl)
+    .then((res) => {
+      return res.json();
+    })
+    .then((kit) => {
+      for (let y in kit.data.sensors) {
+        let sensor = kit.data.sensors[y];
+        if (sensor.value != null) {
+          let opt = document.createElement('option');
+          opt.value = Kits[i].id + '-' + sensor.id;
+          opt.innerHTML = sensorName(sensor.name, sensor.id);
+          optgroup.appendChild(opt);
+        }
+      }
+    });
   }
+
   let chartSection = document.createElement("section");
   selectSection.appendChild(select);
   select.addEventListener('change', function(event) {
