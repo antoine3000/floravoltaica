@@ -3,6 +3,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  @apply block !important;
+}
+
 .main {
   @apply p-4;
 }
@@ -68,5 +72,5 @@
   @apply flex flex-row;
 }
 .partners__item {
-  @apply w-12 mr-4;
+  @apply w-48 mr-4;
 }

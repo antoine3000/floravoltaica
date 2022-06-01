@@ -94,8 +94,8 @@ function displaySensorSection(kit, sensorId) {
   sensorSection.innerHTML =
   `
   <section class="sensor__info">
-  <h1>Title</h1>
-  <p>Description</p>
+  <h1>${sensorName(sensorId, sensorId)}</h1>
+  <p>${sensorDescription(sensorId)}</p>
   </section>
   `;
   // select second sensor
@@ -173,6 +173,17 @@ function initCharts(elemSelf, sensor1) {
   function displayChart(elemSelf, sensor1, sensor2) {
   // dom structure
   if (elemSelf) elemSelf.innerHTML = '';
+  if (sensor1.sensor_id != sensor2.sensor_id) {
+    let chartInfo = document.createElement("section");
+    chartInfo.innerHTML =
+    `
+    <section class="sensor__info">
+    <h1>${sensorName(sensor2.sensor_id, sensor2.sensor_id)}</h1>
+    <p>${sensorDescription(sensor2.sensor_id)}</p>
+    </section>
+    `;
+    elemSelf.appendChild(chartInfo);
+  }
   let chart = document.createElement("canvas");
   elemSelf.appendChild(chart);
   // sensor data
@@ -249,6 +260,13 @@ function sensorName(name, id) {
   } else {
     return name
   }
+}
+
+function sensorDescription(id) {
+  let descNew = Settings.sensors.filter(function(elem){
+    if (id == elem.id && elem.desc.length > 0)  return elem.desc
+  });
+  return descNew[0].desc
 }
 
 function kitName(name, id) {
