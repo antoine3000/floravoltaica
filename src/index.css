@@ -7,29 +7,29 @@ body {
   @apply block !important;
 }
 
-.main {
-  @apply p-4;
+.header, .select, #app, .footer {
+  @apply px-12;
 }
 .header {
-  @apply mb-6;
+  @apply py-6;
 }
 .header__logo {
   @apply block w-12 mb-2;
 }
 .header__title {
-  @apply text-3xl font-bold mb-1;
+  @apply text-6xl font-bold mb-6;
 }
 .header__desc {
-  @apply text-xl;
+  @apply text-lg max-w-screen-md mb-1;
 }
 .select {
-  @apply mb-6;
+  @apply pb-8;
 }
 .select label {
-  @apply block mb-2;
+  @apply block mb-2 uppercase text-xs tracking-wide;
 }
 .select select {
-  @apply w-full mb-1 rounded;
+  @apply w-full mb-1 rounded-lg text-black border-black;
 }
 .select span {
   @apply block text-sm mb-2;
@@ -43,9 +43,24 @@ body {
 .kit .value {
   @apply mr-0.5;
 }
-#app h1 {
-  @apply text-lg mt-4 mb-4 font-bold;
+#app {
+  @apply bg-neutral-800 text-white;
 }
+#app .kit > h1 {
+  @apply text-6xl font-bold mb-4 pt-8;
+}
+#app .kit > h2 {
+  @apply text-4xl font-bold mb-4;
+}
+#app .kit > p {
+  @apply text-lg max-w-screen-md mb-4;
+}
+#app .kit > h5 {
+  @apply font-mono text-xs uppercase tracking-wide mb-6;
+}
+/*.kit__sensor {
+  &
+}*/
 #datepicker {
   @apply rounded w-full;
 }
@@ -63,10 +78,10 @@ body {
   @apply bg-indigo-500;
 }
 .footer {
-  @apply mt-12;
+  @apply mt-auto;
 }
 .footer h2 {
-  @apply text-lg mb-6 underline underline-offset-8;
+  @apply text-xs uppercase tracking-wide mb-6 underline underline-offset-8;
 }
 .partners {
   @apply flex flex-row;

@@ -4,13 +4,15 @@
       "id": "50",
       "icon": "smog",
       "title": "Soil moisture",
-      "desc": "custom desc"
+      "desc": "custom desc",
+      "color": "rgba(255, 0, 255, 1)"
     },
     {
       "id": "55",
       "icon": "smog",
       "title": "temperature",
-      "desc": "custom desc"
+      "desc": "custom desc",
+      "color": "rgba(255, 255, 0, 1)"
     }
   ],
   "sensors": [

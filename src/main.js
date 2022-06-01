@@ -48,8 +48,9 @@ function displayKit(kit) {
   elem.innerHTML =
   `
   <h1>${kitName(kit.name, kit.id)}</h1>
-  <h2>${kitDescription(kit.id)}</h2>
-  <h3>Last data received: <span>${last_update}</span></h3>
+  <p>${kitDescription(kit.id)}</p>
+  <h5>Last data received: <span>${last_update}</span></h5>
+  <h2>Instant values</h2>
   `
   app.appendChild(elem);
   // sensors
@@ -213,15 +214,15 @@ function initCharts(elemSelf, sensor1) {
       datasets: [{
         label: sensorName(sensor1.sensor_key, sensor1.sensor_id),
         data: sensor1DataStruct,
-        borderColor: "rgba(255, 0, 0, 1)",
-        backgroundColor: "rgba(255, 0, 0, 0.3)",
+        borderColor: sensorColor(sensor1.sensor_id),
+        backgroundColor: sensorColor(sensor1.sensor_id),
         yAxisID: 'y',
       },
       {
         label: sensorName(sensor2.sensor_key, sensor2.sensor_id),
         data: sensor2DataStruct,
-        borderColor: "rgba(0, 0, 255, 1)",
-        backgroundColor: "rgba(0, 0, 255, 0.3)",
+        borderColor: "rgba(255, 0, 0, 1)",
+        backgroundColor: "rgba(255, 0, 0, 1)",
         yAxisID: 'y1',
       }]
     }
@@ -230,8 +231,8 @@ function initCharts(elemSelf, sensor1) {
       datasets: [{
         label: sensorName(sensor1.sensor_key, sensor1.sensor_id),
         data: sensor1DataStruct,
-        borderColor: "rgba(255, 0, 0, 1)",
-        backgroundColor: "rgba(255, 0, 0, 0.3)",
+        borderColor: sensorColor(sensor1.sensor_id),
+        backgroundColor: sensorColor(sensor1.sensor_id),
         yAxisID: 'y',
       }]
     }
@@ -292,6 +293,13 @@ function sensorDescription(id) {
     if (id == elem.id && elem.desc.length > 0)  return elem.desc
   });
   return descNew[0].desc
+}
+
+function sensorColor(id) {
+  let colorNew = Settings.sensorsSelection.filter(function(elem){
+    if (id == elem.id && elem.color.length > 0)  return elem.color
+  });
+  return colorNew[0].color
 }
 
 function kitName(name, id) {
