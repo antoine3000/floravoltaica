@@ -338,7 +338,7 @@ function getDates(kit) {
   // get date
   dateEnd = new Date(new Date().getTime());
   dateStart = new Date(new Date().getTime());
-  dateStart.setDate(new Date().getDate() - 10);
+  dateStart.setDate(new Date().getDate() - 15);
   // format date
   dateStart = dateStart.toISOString().split('T')[0];
   dateEnd = dateEnd.toISOString().split('T')[0];

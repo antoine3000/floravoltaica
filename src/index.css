@@ -5,7 +5,7 @@
 
 body {
   @apply block !important;
-  @apply text-stone-100 bg-emerald-900;
+  @apply text-stone-100 bg-emerald-800;
 }
 
 .main {
@@ -38,7 +38,7 @@ label {
   @apply block mb-2 uppercase text-xs tracking-wide max-w-screen-md;
 }
 .select select {
-  @apply w-full mb-1 rounded text-emerald-900 max-w-screen-md;
+  @apply w-full mb-1 rounded text-emerald-700 max-w-screen-md;
 }
 .select span {
   @apply block text-sm mb-2;
@@ -56,7 +56,7 @@ canvas {
   @apply mt-6;
 }
 #app {
-  @apply bg-stone-300 text-emerald-900;
+  @apply bg-stone-300 text-emerald-700;
 }
 #app .kit > h1 {
   @apply text-6xl font-bold mb-4 pt-8;
@@ -75,7 +75,7 @@ canvas {
   @apply max-w-screen-md;
 }
 .sensor__section {
-  @apply border-t-2 border-emerald-900 mt-12;
+  @apply border-t-2 border-emerald-700 mt-12;
 }
 .sensor__section:last-child {
   @apply pb-12;
@@ -83,7 +83,7 @@ canvas {
 .kit__sensor {
   @apply font-mono;
   @apply max-w-screen-md;
-  @apply border-b border-dotted border-b-2 border-emerald-900 pb-2 mb-2;
+  @apply border-b border-dotted border-b-2 border-emerald-700 pb-2 mb-2;
   @apply flex;
 }
 .kit__sensor .name {
@@ -107,17 +107,17 @@ canvas {
   @apply w-full;
 }
 .litepicker .container__days .day-item {
-  @apply hover:border-emerald-900 hover:text-white hover:shadow-none;
+  @apply hover:border-emerald-700 hover:text-white hover:shadow-none;
 }
 .litepicker .container__days .day-item.is-in-range {
   @apply bg-emerald-400;
 }
 .litepicker .container__days .day-item.is-start-date,
 .litepicker .container__days .day-item.is-end-date {
-  @apply bg-emerald-800;
+  @apply bg-emerald-700;
 }
 .litepicker .container__tooltip {
-  @apply text-emerald-900;
+  @apply text-emerald-700;
 }
 #app h1 {
   @apply text-4xl font-bold mb-4 mt-6;
