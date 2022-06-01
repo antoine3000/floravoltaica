@@ -42,19 +42,28 @@ function getKit(id) {
 
 function displayKit(kit) {
   app.innerHTML = "";
+  let elem = document.createElement("article");
+  elem.classList.add("kit");
+  let last_update = new Date(kit.last_reading_at);
+  elem.innerHTML =
+  `
+  <h1>${kitName(kit.name, kit.id)}</h1>
+  <h2>Last data received: <span>${last_update}</span></h2>
+  `
+  app.appendChild(elem);
   // sensors
   for (let i in kit.data.sensors) {
     let sensor = kit.data.sensors[i];
     if (sensor.value != null) {
-      let elem = document.createElement("article");
-      elem.classList.add("kit");
-      elem.innerHTML =
+      let elemSensor = document.createElement("section");
+      elemSensor.classList.add("kit__sensor");
+      elemSensor.innerHTML =
       `
       <span class="name">${sensorName(sensor.name, sensor.id)}</span>
       <span class="value">${roundUp(sensor.value, 1)}</span>
       <span class="unit">${sensor.unit}</span>
       `
-      app.appendChild(elem);
+      elem.appendChild(elemSensor);
     }
   }
   let title = document.createElement("h1");
@@ -134,8 +143,19 @@ function displaySensorSection(kit, sensorId) {
 }
 
 function initCharts(elemSelf, sensor1) {
-  let sensorUrl1 = `https://api.smartcitizen.me/v0/devices/${kitMain}/readings?sensor_id=${sensor1}&rollup=4h&from=${dateStart}&to=${dateEnd}`;
-  let sensorUrl2 = sensorSecond ? `https://api.smartcitizen.me/v0/devices/${kitSecond}/readings?sensor_id=${sensorSecond}&rollup=4h&from=${dateStart}&to=${dateEnd}` : sensorUrl1;
+  let rollup;
+  let diff = dateDiff(new Date(dateStart), new Date(dateEnd));
+  if (diff.day <= 7) {
+    rollup = 1
+  } else if (diff.day > 7 && diff.day <= 30) {
+    rollup = 6
+  } else if (diff.day > 30 && diff.day <= 90) {
+    rollup = 12
+  } else {
+    rollup = 24
+  }
+  let sensorUrl1 = `https://api.smartcitizen.me/v0/devices/${kitMain}/readings?sensor_id=${sensor1}&rollup=${rollup}h&from=${dateStart}&to=${dateEnd}`;
+  let sensorUrl2 = sensorSecond ? `https://api.smartcitizen.me/v0/devices/${kitSecond}/readings?sensor_id=${sensorSecond}&rollup=${rollup}h&from=${dateStart}&to=${dateEnd}` : sensorUrl1;
   Promise.all([
     fetch(sensorUrl1),
     fetch(sensorUrl2)
@@ -231,6 +251,17 @@ function sensorName(name, id) {
   }
 }
 
+function kitName(name, id) {
+  let nameNew = Kits.filter(function(elem){
+    if (id == elem.id && elem.name.length > 0)  return elem.name
+  });
+  if (nameNew.length > 0) {
+    return nameNew[0].name
+  } else {
+    return name
+  }
+}
+
 function roundUp(num, precision) {
   precision = Math.pow(10, precision)
   return Math.ceil(num * precision) / precision
@@ -269,4 +300,18 @@ function getDates(kit) {
       });
     }
   });
+}
+
+function dateDiff(date1, date2){
+  var diff = {}
+  var tmp = date2 - date1;
+  tmp = Math.floor(tmp/1000);
+  diff.sec = tmp % 60;
+  tmp = Math.floor((tmp-diff.sec)/60);
+  diff.min = tmp % 60;
+  tmp = Math.floor((tmp-diff.min)/60);
+  diff.hour = tmp % 24;
+  tmp = Math.floor((tmp-diff.hour)/24);
+  diff.day = tmp;
+  return diff;
 }
