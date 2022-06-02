@@ -44,14 +44,23 @@ function displayKit(kit) {
   app.innerHTML = "";
   let elem = document.createElement("article");
   elem.classList.add("kit");
+  let elemIntro = document.createElement("section");
+  elemIntro.classList.add("kit__intro");
+  let elemData = document.createElement("section");
+  elemData.classList.add("kit__data");
   let last_update = new Date(kit.last_reading_at);
-  elem.innerHTML =
+  elemIntro.innerHTML =
   `
   <h1>${kitName(kit.name, kit.id)}</h1>
   <p>${kitDescription(kit.id)}</p>
+  `
+  elem.appendChild(elemIntro);
+  elemData.innerHTML =
+  `
   <h2>Last data capture</h2>
   <h5>Received: <span>${last_update}</span></h5>
   `
+  elem.appendChild(elemData);
   app.appendChild(elem);
   // sensors
   for (let i in kit.data.sensors) {
@@ -65,17 +74,18 @@ function displayKit(kit) {
       <span class="value">${roundUp(sensor.value, 1)}</span>
       <span class="unit">${sensor.unit}</span>
       `
-      elem.appendChild(elemSensor);
+      elemData.appendChild(elemSensor);
     }
   }
-  let dataTtitle = document.createElement("section");
-  dataTtitle.classList.add("data-title");
-  dataTtitle.innerHTML =
+  let dataTitle = document.createElement("section");
+  dataTitle.classList.add("data-title");
+  dataTitle.id = "data-title";
+  dataTitle.innerHTML =
   `
   <h1>Data visualization</h1>
   <label>Select a date range</label>
   `;
-  app.appendChild(dataTtitle);
+  app.appendChild(dataTitle);
   getDates(kit);
   displaySensorSections(kit);
 }
@@ -98,21 +108,21 @@ function displaySensorSection(kit, sensorId) {
   app.appendChild(sensorSection);
   // info
   let infoSection = document.createElement("section");
-  sensorSection.innerHTML =
+  infoSection.classList.add('sensor__info');
+  infoSection.innerHTML =
   `
-  <section class="sensor__info">
   <h2>${sensorName(sensorId, sensorId)}</h2>
   <p>${sensorDescription(sensorId)}</p>
-  </section>
   `;
+  sensorSection.appendChild(infoSection);
   // select second sensor
   let selectLabel = document.createElement("label");
   selectLabel.classList.add('select__label');
   selectLabel.innerHTML = `Select a sensor for comparison`;
-  sensorSection.appendChild(selectLabel);
+  infoSection.appendChild(selectLabel);
   let selectSection = document.createElement("section");
   selectSection.classList.add('sensor__select');
-  sensorSection.appendChild(selectSection);
+  infoSection.appendChild(selectSection);
   let select = document.createElement("select");
   select.innerHTML = `<option value="">Select a sensor for comparison</option>`;
 
@@ -140,7 +150,7 @@ function displaySensorSection(kit, sensorId) {
   }
 
   let chartSection = document.createElement("section");
-  selectSection.appendChild(select);
+  infoSection.appendChild(select);
   select.addEventListener('change', function(event) {
     let value = event.target.value;
     kitSecond = value.split('-')[0];
@@ -185,15 +195,16 @@ function initCharts(elemSelf, sensor1) {
   // dom structure
   if (elemSelf) elemSelf.innerHTML = '';
   if (sensor1.sensor_id != sensor2.sensor_id) {
-    let chartInfo = document.createElement("section");
-    chartInfo.innerHTML =
+    let sensorInfo = document.createElement("section");
+    sensorInfo.classList.add('sensor__info--second');
+    sensorInfo.innerHTML =
     `
-    <section class="sensor__info">
     <h2>& ${sensorName(sensor2.sensor_id, sensor2.sensor_id)}</h2>
     <p>${sensorDescription(sensor2.sensor_id)}</p>
-    </section>
     `;
-    elemSelf.appendChild(chartInfo);
+    console.log(elemSelf);
+    let prevSibling = elemSelf.previousElementSibling;
+    prevSibling.appendChild(sensorInfo);
   }
   let chart = document.createElement("canvas");
   elemSelf.appendChild(chart);
@@ -263,7 +274,7 @@ function initCharts(elemSelf, sensor1) {
           position: 'left',
           title: {
             display: true,
-            text: sensorName(sensor1.sensor_key, sensor1.sensor_id),
+            text: sensorName(sensor1.sensor_key, sensor1.sensor_id) + ' (V)',
           }
         },
         y1: {
@@ -346,7 +357,8 @@ function getDates(kit) {
   let picker = document.createElement("input");
   picker.id = "datepicker";
   picker.type = "text";
-  app.appendChild(picker);
+  let dataTitle = document.getElementById("data-title");
+  dataTitle.appendChild(picker);
   new Litepicker({
     element: picker,
     singleMode: false,
