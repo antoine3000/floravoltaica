@@ -64,18 +64,28 @@ function displayKit(kit) {
   elem.appendChild(elemData);
   app.appendChild(elem);
   // sensors
-  for (let i in kit.data.sensors) {
-    let sensor = kit.data.sensors[i];
-    if (sensor.value != null) {
-      let elemSensor = document.createElement("section");
-      elemSensor.classList.add("kit__sensor");
-      elemSensor.innerHTML =
-      `
-      <span class="name">${sensorName(sensor.name, sensor.id)}</span>
-      <span class="value">${roundUp(sensor.value, 1)}</span>
-      <span class="unit">${sensor.unit}</span>
-      `
-      elemData.appendChild(elemSensor);
+  for (let y in Settings.sensors) {
+    for (let i in kit.data.sensors) {
+      if (kit.data.sensors[i].id == Settings.sensors[y].id) {
+        let sensor = kit.data.sensors[i];
+        if (sensor.value != null) {
+          let elemSensor = document.createElement("section");
+          for (let ii in Settings.sensorsSelection) {
+            if (kit.data.sensors[i].id == Settings.sensorsSelection[ii].id) {
+              elemSensor.classList.add("kit__sensor", "selected");
+            } else {
+              elemSensor.classList.add("kit__sensor");
+            }
+          }
+          elemSensor.innerHTML =
+          `
+          <span class="name">${sensorName(sensor.name, sensor.id)}</span>
+          <span class="value">${roundUp(sensor.value, 1)}</span>
+          <span class="unit">${sensor.unit}</span>
+          `
+          elemData.appendChild(elemSensor);
+        }
+      }
     }
   }
   let dataTitle = document.createElement("section");
@@ -200,7 +210,6 @@ function initCharts(elemSelf, sensor1) {
   function displayChart(elemSelf, sensor1, sensor2) {
   // dom structure
   if (elemSelf) elemSelf.innerHTML = '';
-  console.log(sensor1);
   if (sensor1.device_id != sensor2.device_id || sensor1.sensor_id != sensor2.sensor_id) {
     let sensorInfo = document.createElement("section");
     sensorInfo.classList.add('sensor__info--second');
