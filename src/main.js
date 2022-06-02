@@ -44,22 +44,23 @@ function displayKit(kit) {
   app.innerHTML = "";
   let elem = document.createElement("article");
   elem.classList.add("kit");
+  let elemTitle = document.createElement("h1");
+  elemTitle.classList.add("kit__title");
   let elemIntro = document.createElement("section");
   elemIntro.classList.add("kit__intro");
   let elemData = document.createElement("section");
   elemData.classList.add("kit__data");
   let last_update = new Date(kit.last_reading_at);
-  elemIntro.innerHTML =
-  `
-  <h1>${kitName(kit.name, kit.id)}</h1>
-  <p>${kitDescription(kit.id)}</p>
-  `
+  
+  elemTitle.innerHTML = `${kitName(kit.name, kit.id)}`;
+  elemIntro.innerHTML =`<p>${kitDescription(kit.id)}</p>`
   elem.appendChild(elemIntro);
   elemData.innerHTML =
   `
   <h2>Last data capture</h2>
   <h5>Received: <span>${last_update}</span></h5>
   `
+  app.appendChild(elemTitle);
   elem.appendChild(elemData);
   app.appendChild(elem);
   // sensors
@@ -177,6 +178,11 @@ function initCharts(elemSelf, sensor1) {
   }
   let sensorUrl1 = `https://api.smartcitizen.me/v0/devices/${kitMain}/readings?sensor_id=${sensor1}&rollup=${rollup}h&from=${dateStart}&to=${dateEnd}`;
   let sensorUrl2 = sensorSecond ? `https://api.smartcitizen.me/v0/devices/${kitSecond}/readings?sensor_id=${sensorSecond}&rollup=${rollup}h&from=${dateStart}&to=${dateEnd}` : sensorUrl1;
+  // clean
+  let prevSibling = elemSelf.previousElementSibling;
+  let prevElem = prevSibling.querySelector('.sensor__info--second');
+  if (prevElem) prevElem.parentNode.removeChild(prevElem);
+  // get data
   Promise.all([
     fetch(sensorUrl1),
     fetch(sensorUrl2)
@@ -194,15 +200,15 @@ function initCharts(elemSelf, sensor1) {
   function displayChart(elemSelf, sensor1, sensor2) {
   // dom structure
   if (elemSelf) elemSelf.innerHTML = '';
-  if (sensor1.sensor_id != sensor2.sensor_id) {
+  console.log(sensor1);
+  if (sensor1.device_id != sensor2.device_id || sensor1.sensor_id != sensor2.sensor_id) {
     let sensorInfo = document.createElement("section");
     sensorInfo.classList.add('sensor__info--second');
     sensorInfo.innerHTML =
     `
-    <h2>& ${sensorName(sensor2.sensor_id, sensor2.sensor_id)}</h2>
+    <h2>& ${sensorName(sensor2.sensor_id, sensor2.sensor_id)} (${kitName(sensor2.device_id, sensor2.device_id)})</h2>
     <p>${sensorDescription(sensor2.sensor_id)}</p>
     `;
-    console.log(elemSelf);
     let prevSibling = elemSelf.previousElementSibling;
     prevSibling.appendChild(sensorInfo);
   }
@@ -377,6 +383,7 @@ function getDates(kit) {
       picker.on('selected', (date1, date2) => {
         dateStart = date1.dateInstance.toISOString().split('T')[0];
         dateEnd = date2.dateInstance.toISOString().split('T')[0];
+        kitSecond, sensorSecond = null;
         displaySensorSections(kit);
       });
     }
