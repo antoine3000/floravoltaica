@@ -79,6 +79,7 @@ function displayKit(kit) {
           }
           elemSensor.innerHTML =
           `
+          <span class="icon"><i class="${sensorIcon(sensor.id)}"></i></span>
           <span class="name">${sensorName(sensor.name, sensor.id)}</span>
           <span class="value">${roundUp(sensor.value, 1)}</span>
           <span class="unit">${sensor.unit}</span>
@@ -358,6 +359,13 @@ function kitDescription(id) {
 function roundUp(num, precision) {
   precision = Math.pow(10, precision)
   return Math.ceil(num * precision) / precision
+}
+
+function sensorIcon(id) {
+  let icon = Settings.sensors.filter(function(elem){
+    if (id == elem.id && elem.icon.length > 0) return elem.icon
+  });
+  if (icon.length > 0) return `fa-solid fa-${icon[0].icon}`
 }
 
 function getDates(kit) {
