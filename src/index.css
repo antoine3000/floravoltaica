@@ -22,7 +22,7 @@ body {
   @apply px-4 md:px-12;
 }
 .header {
-  @apply pt-12 pb-6; 
+  @apply pt-8 xl:pt-12 pb-6; 
 }
 .header__logo {
   @apply block w-12 mb-2;
@@ -34,7 +34,7 @@ body {
   @apply md:text-lg mb-1 max-w-screen-md;
 }
 .select {
-  @apply pb-16;
+  @apply pb-8 xl:pb-16;
 }
 label {
   @apply block mb-2 uppercase text-xs tracking-wide max-w-screen-md;
@@ -46,20 +46,20 @@ label {
   @apply block text-sm mb-2;
 }
 .kit {
-  @apply bg-stone-200 pt-8 pb-16;
+  @apply bg-stone-200 pt-4 xl:pt-8 pb-8 xl:pb-16;
 }
 .kit .icon {
-  @apply mr-2 text-xl inline-block w-8 text-center;
+  @apply mr-2 text-xs xl:text-base inline-block xl:w-8 text-center;
 }
 .kit .name {
-  @apply mr-2;
+  @apply mr-auto text-xs xl:text-base;
 }
 .kit .value {
   @apply mr-1;
-  @apply text-lg;
+  @apply text-xs xl:text-lg;
 }
 .kit .unit {
-  @apply font-mono text-sm align-bottom;
+  @apply font-mono text-sm align-bottom text-xs xl:text-base;
 }
 canvas {
   @apply mt-6 xl:mt-0;
@@ -68,7 +68,7 @@ canvas {
   @apply bg-stone-300 text-emerald-700;
 }
 .kit__data > h2 {
-  @apply text-2xl font-bold mb-1 mt-6 xl:mt-0;
+  @apply text-2xl font-bold mb-1 mt-0 xl:mt-6 xl:mt-0;
   @apply max-w-screen-md;
 }
 .kit__intro {
@@ -82,14 +82,14 @@ canvas {
   @apply max-w-screen-md;
 }
 .kit__data {
-  @apply pt-4;
+  @apply pt-2 xl:pt-4;
 }
 .kit__data > h5 {
   @apply font-sans text-xs uppercase tracking-wide mb-6;
   @apply max-w-screen-md;
 }
 .sensor__section {
-  @apply mt-12;
+  @apply mt-6 xl:mt-12;
 }
 .data-title + .sensor__section {
  @apply mt-0 xl:mt-12;
@@ -101,17 +101,14 @@ canvas {
   @apply font-mono font-normal;
   @apply max-w-screen-md;
   @apply border-b border-dotted border-b-2 border-emerald-700 pb-2 pt-2 px-2;
-  @apply flex items-baseline
+  @apply flex items-baseline;
 }
 .kit__sensor.selected {
   @apply bg-amber-100 rounded;
 }
-.kit__sensor .name {
-  @apply mr-auto;
-}
 .data-title {
   /*@apply xl:pt-4 xl:pb-4 mt-8 bg-stone-300;*/
-  @apply bg-stone-300 pt-12 pb-12;
+  @apply bg-stone-300 py-6 xl:py-12;
   @apply bg-gradient-to-b from-stone-200 to-stone-300;
   @apply border-t border-emerald-700;
 }
@@ -119,7 +116,7 @@ canvas {
   @apply max-w-screen-md;
 }
 .data-title > h1 {
-  @apply text-2xl md:text-4xl font-bold mb-4 mt-6;
+  @apply text-2xl md:text-4xl font-bold mb-4 mt-0 xl:mt-6;
   @apply max-w-screen-md;
 }
 .data-title > input {
