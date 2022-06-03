@@ -2,19 +2,19 @@
   "sensorsSelection": [
     {
       "id": "50",
-      "color": "#4ADE80"
+      "color": "#7E22CE"
     },
     {
       "id": "55",
-      "color": "#14532D"
+      "color": "#9D174D"
     },
     {
       "id": "14",
-      "color": "#22D3EE"
+      "color": "#3B82F6"
     },
     {
       "id": "10",
-      "color": "#164E63"
+      "color": "#FB923C"
     }
   ],
   "sensors": [

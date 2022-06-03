@@ -20,49 +20,49 @@ function select() {
     kitMain = event.target.value;
     getKit(kitMain)
   });
-  select.innerHTML = `<option value="">Select a sensor kit</option>`;
-  for (let i in Kits) {
-    let opt = document.createElement('option');
-    opt.value = Kits[i].id;
-    opt.innerHTML = Kits[i].name;
-    select.appendChild(opt);
+    select.innerHTML = `<option value="">Select a sensor kit</option>`;
+    for (let i in Kits) {
+      let opt = document.createElement('option');
+      opt.value = Kits[i].id;
+      opt.innerHTML = Kits[i].name;
+      select.appendChild(opt);
+    }
   }
-}
 
-function getKit(id) {
-  const kitUrl = `https://api.smartcitizen.me/v0/devices/${id}`;
-  https: fetch(kitUrl)
-  .then((res) => {
-    return res.json();
-  })
-  .then((kit) => {
-    displayKit(kit);
-  });
-}
+  function getKit(id) {
+    const kitUrl = `https://api.smartcitizen.me/v0/devices/${id}`;
+    https: fetch(kitUrl)
+    .then((res) => {
+      return res.json();
+    })
+    .then((kit) => {
+      displayKit(kit);
+    });
+  }
 
-function displayKit(kit) {
-  app.innerHTML = "";
-  let elem = document.createElement("article");
-  elem.classList.add("kit");
-  let elemTitle = document.createElement("h1");
-  elemTitle.classList.add("kit__title");
-  let elemIntro = document.createElement("section");
-  elemIntro.classList.add("kit__intro");
-  let elemData = document.createElement("section");
-  elemData.classList.add("kit__data");
-  let last_update = new Date(kit.last_reading_at);
-  
-  elemTitle.innerHTML = `${kitName(kit.name, kit.id)}`;
-  elemIntro.innerHTML =`<p>${kitDescription(kit.id)}</p>`
-  elem.appendChild(elemIntro);
-  elemData.innerHTML =
-  `
-  <h2>Last data capture</h2>
-  <h5>Received: <span>${last_update}</span></h5>
-  `
-  app.appendChild(elemTitle);
-  elem.appendChild(elemData);
-  app.appendChild(elem);
+  function displayKit(kit) {
+    app.innerHTML = "";
+    let elem = document.createElement("article");
+    elem.classList.add("kit");
+    let elemIntro = document.createElement("section");
+    elemIntro.classList.add("kit__intro");
+    let elemData = document.createElement("section");
+    elemData.classList.add("kit__data");
+    let last_update = new Date(kit.last_reading_at);
+
+    elemIntro.innerHTML =
+    `
+    <h1>${kitName(kit.name, kit.id)}</h1>
+    <p>${kitDescription(kit.id)}</p>
+    `
+    elem.appendChild(elemIntro);
+    elemData.innerHTML =
+    `
+    <h2>Last data capture</h2>
+    <h5>Received: <span>${last_update}</span></h5>
+    `
+    elem.appendChild(elemData);
+    app.appendChild(elem);
   // sensors
   for (let y in Settings.sensors) {
     for (let i in kit.data.sensors) {
@@ -123,7 +123,7 @@ function displaySensorSection(kit, sensorId) {
   infoSection.classList.add('sensor__info');
   infoSection.innerHTML =
   `
-  <h2>${sensorName(sensorId, sensorId)}</h2>
+  <h2>${sensorName(sensorId, sensorId)} <span>${kitName(kit.id, kit.id)}</span></h2>
   <p>${sensorDescription(sensorId)}</p>
   `;
   sensorSection.appendChild(infoSection);
@@ -167,15 +167,14 @@ function displaySensorSection(kit, sensorId) {
     let value = event.target.value;
     kitSecond = value.split('-')[0];
     sensorSecond = value.split('-')[1];
-    initCharts(chartSection, sensorId);
+    initCharts(kit, chartSection, sensorId);
   });
-  
   chartSection.classList.add('sensor__chart');
   sensorSection.appendChild(chartSection);
-  initCharts(chartSection, sensorId);
+  initCharts(kit, chartSection, sensorId);
 }
 
-function initCharts(elemSelf, sensor1) {
+function initCharts(kit, elemSelf, sensor1) {
   let rollup;
   let diff = dateDiff(new Date(dateStart), new Date(dateEnd));
   if (diff.day <= 7) {
@@ -197,18 +196,18 @@ function initCharts(elemSelf, sensor1) {
   Promise.all([
     fetch(sensorUrl1),
     fetch(sensorUrl2)
-    ]).then(function (responses) {
-      return Promise.all(responses.map(function (response) {
-        return response.json();
-      }));
-    }).then(function (sensor) {
-      displayChart(elemSelf, sensor[0], sensor[1]);
-    }).catch(function (error) {
-      console.log(error);
-    });
-  }
+  ]).then(function (responses) {
+    return Promise.all(responses.map(function (response) {
+      return response.json();
+    }));
+  }).then(function (sensor) {
+    displayChart(kit, elemSelf, sensor[0], sensor[1], rollup);
+  }).catch(function (error) {
+    console.log(error);
+  });
+}
 
-  function displayChart(elemSelf, sensor1, sensor2) {
+function displayChart(kit, elemSelf, sensor1, sensor2, rollup) {
   // dom structure
   if (elemSelf) elemSelf.innerHTML = '';
   if (sensor1.device_id != sensor2.device_id || sensor1.sensor_id != sensor2.sensor_id) {
@@ -216,7 +215,8 @@ function initCharts(elemSelf, sensor1) {
     sensorInfo.classList.add('sensor__info--second');
     sensorInfo.innerHTML =
     `
-    <h2>& ${sensorName(sensor2.sensor_id, sensor2.sensor_id)} (${kitName(sensor2.device_id, sensor2.device_id)})</h2>
+    <div>Compared with</div>
+    <h2>${sensorName(sensor2.sensor_id, sensor2.sensor_id)} <span>${kitName(sensor2.device_id, sensor2.device_id)}</span></h2>
     <p>${sensorDescription(sensor2.sensor_id)}</p>
     `;
     let prevSibling = elemSelf.previousElementSibling;
@@ -257,8 +257,8 @@ function initCharts(elemSelf, sensor1) {
       {
         label: sensorName(sensor2.sensor_key, sensor2.sensor_id),
         data: sensor2DataStruct,
-        borderColor: "#1D4ED8",
-        backgroundColor: "#1D4ED8",
+        borderColor: "#EF4444",
+        backgroundColor: "#EF4444",
         yAxisID: 'y1',
       }]
     }
@@ -273,6 +273,18 @@ function initCharts(elemSelf, sensor1) {
       }]
     }
   }
+  let timeUnit;
+  if (rollup <= 2) {
+    timeUnit = 'hour'
+  } else if (rollup > 2 && rollup <= 60) {
+    timeUnit = 'day'
+  } else if (rollup >= 60) {
+    timeUnit = 'month'
+  }
+  let sensorMainObj = kit.data.sensors.find(elem => elem.id === parseInt(sensor1.sensor_id));
+  let sensorMainUnit = sensorMainObj.unit;
+  let sensorSecondObj = kit.data.sensors.find(elem => elem.id === parseInt(sensor2.sensor_id));
+  let sensorSecondUnit = sensorSecondObj.unit;
   const myChart = new Chart(chart, {
     type: 'line',
     data: chartData,
@@ -290,7 +302,7 @@ function initCharts(elemSelf, sensor1) {
           position: 'left',
           title: {
             display: true,
-            text: sensorName(sensor1.sensor_key, sensor1.sensor_id) + ' (V)',
+            text: sensorName(sensor1.sensor_key, sensor1.sensor_id) + ' ('+ sensorMainUnit +')',
           }
         },
         y1: {
@@ -299,13 +311,13 @@ function initCharts(elemSelf, sensor1) {
           position: 'right',  
           title: {
             display: true,
-            text: sensorName(sensor2.sensor_key, sensor2.sensor_id),
+            text: sensorName(sensor2.sensor_key, sensor2.sensor_id) + ' ('+ sensorSecondUnit +')',
           },
         },
         x: {
           type: 'time',
           time: {
-            unit: 'day'
+            unit: timeUnit,
           }
         }
       }

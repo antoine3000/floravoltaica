@@ -1,4 +1,5 @@
 @import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=JetBrains+Mono&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,6 +7,7 @@
 body {
   @apply block !important;
   @apply text-stone-100 bg-emerald-800;
+  @apply subpixel-antialiased;
 }
 
 .main {
@@ -16,7 +18,7 @@ body {
   @apply py-8;
 }
 
-.header, .select, .kit__title, .kit, .data-title, .sensor__section, .footer {
+.header, .select, .kit, .data-title, .sensor__section, .footer {
   @apply px-4 md:px-12;
 }
 .header {
@@ -47,14 +49,14 @@ label {
   @apply bg-stone-200 pt-8 pb-16;
 }
 .kit .icon {
-  @apply mr-2 text-xl inline-block w-6 text-left;
+  @apply mr-2 text-xl inline-block w-8 text-center;
 }
 .kit .name {
-  @apply font-bold mr-2;
+  @apply mr-2;
 }
 .kit .value {
   @apply mr-1;
-  @apply font-bold text-lg;
+  @apply text-lg;
 }
 .kit .unit {
   @apply font-mono text-sm align-bottom;
@@ -65,20 +67,25 @@ canvas {
 #app {
   @apply bg-stone-300 text-emerald-700;
 }
-.kit__title {
-  @apply bg-stone-200 pt-12;
-  @apply text-4xl md:text-6xl font-bold;
-}
 .kit__data > h2 {
   @apply text-2xl font-bold mb-1 mt-6 xl:mt-0;
   @apply max-w-screen-md;
+}
+.kit__intro {
+  @apply xl:h-fit xl:sticky xl:top-0;
+}
+.kit__intro > h1 {
+  @apply text-4xl md:text-6xl font-bold mb-4 pt-4;
 }
 .kit__intro > p {
   @apply md:text-lg mb-4;
   @apply max-w-screen-md;
 }
+.kit__data {
+  @apply pt-4;
+}
 .kit__data > h5 {
-  @apply font-mono text-xs uppercase tracking-wide mb-6;
+  @apply font-sans text-xs uppercase tracking-wide mb-6;
   @apply max-w-screen-md;
 }
 .sensor__section {
@@ -91,7 +98,7 @@ canvas {
   @apply pb-12;
 }
 .kit__sensor {
-  @apply font-mono;
+  @apply font-mono font-normal;
   @apply max-w-screen-md;
   @apply border-b border-dotted border-b-2 border-emerald-700 pb-2 pt-2 px-2;
   @apply flex items-baseline
@@ -151,12 +158,25 @@ canvas {
   @apply xl:mt-8 border-t border-emerald-700 xl:h-fit xl:sticky xl:top-0;
 }
 .sensor__info h2 {
-  @apply text-lg md:text-2xl font-bold mb-2 mt-6;
+  @apply text-lg md:text-xl font-bold mb-2 mt-6;
   @apply max-w-screen-md;
+}
+.sensor__info h2 i {
+  @apply mr-1;
+}
+.sensor__info h2 span {
+  @apply font-mono font-normal text-xs ml-1 inline-block;
+  @apply before:content-['('] after:content-[')'];
 }
 .sensor__info p {
   @apply text-sm;
   @apply max-w-screen-md;
+}
+.sensor__info--second div {
+  @apply mt-6 mb-1 text-sm border-t border-dashed border-emerald-700 pt-4;
+}
+.sensor__info--second h2 {
+  @apply mt-0;
 }
 .footer {
   @apply mt-auto;
