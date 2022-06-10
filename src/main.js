@@ -177,17 +177,19 @@ function displaySensorSection(kit, sensorId) {
 function initCharts(kit, elemSelf, sensor1) {
   let rollup;
   let diff = dateDiff(new Date(dateStart), new Date(dateEnd));
-  if (diff.day <= 7) {
-    rollup = 1
+  if (diff.day <= 2) {
+    rollup = '5m'
+  } else if (diff.day > 2 && diff.day <= 7) {
+    rollup = '1h'
   } else if (diff.day > 7 && diff.day <= 30) {
-    rollup = 6
+    rollup = '6h'
   } else if (diff.day > 30 && diff.day <= 90) {
-    rollup = 12
+    rollup = '12h'
   } else {
-    rollup = 24
+    rollup = '1d'
   }
-  let sensorUrl1 = `https://api.smartcitizen.me/v0/devices/${kitMain}/readings?sensor_id=${sensor1}&rollup=${rollup}h&from=${dateStart}&to=${dateEnd}`;
-  let sensorUrl2 = sensorSecond ? `https://api.smartcitizen.me/v0/devices/${kitSecond}/readings?sensor_id=${sensorSecond}&rollup=${rollup}h&from=${dateStart}&to=${dateEnd}` : sensorUrl1;
+  let sensorUrl1 = `https://api.smartcitizen.me/v0/devices/${kitMain}/readings?sensor_id=${sensor1}&rollup=${rollup}&from=${dateStart}&to=${dateEnd}`;
+  let sensorUrl2 = sensorSecond ? `https://api.smartcitizen.me/v0/devices/${kitSecond}/readings?sensor_id=${sensorSecond}&rollup=${rollup}&from=${dateStart}&to=${dateEnd}` : sensorUrl1;
   // clean
   let prevSibling = elemSelf.previousElementSibling;
   let prevElem = prevSibling.querySelector('.sensor__info--second');
@@ -388,7 +390,7 @@ function getDates(kit) {
   // get date
   dateEnd = new Date(new Date().getTime());
   dateStart = new Date(new Date().getTime());
-  dateStart.setDate(new Date().getDate() - 15);
+  dateStart.setDate(new Date().getDate() - 7);
   // format date
   dateStart = dateStart.toISOString().split('T')[0];
   dateEnd = dateEnd.toISOString().split('T')[0];
@@ -414,8 +416,15 @@ function getDates(kit) {
     },
     setup: (picker) => {
       picker.on('selected', (date1, date2) => {
-        dateStart = date1.dateInstance.toISOString().split('T')[0];
-        dateEnd = date2.dateInstance.toISOString().split('T')[0];
+        if (date1.getTime() === date2.getTime()) {
+          date2.dateInstance.setHours( date2.dateInstance.getHours() + 24 );
+          dateStart = date1.dateInstance.toISOString();
+          dateEnd = date2.dateInstance.toISOString();
+ 
+        } else {
+          dateStart = date1.dateInstance.toISOString();
+          dateEnd = date2.dateInstance.toISOString();
+        }
         kitSecond, sensorSecond = null;
         displaySensorSections(kit);
       });
