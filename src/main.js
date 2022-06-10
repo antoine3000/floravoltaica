@@ -244,7 +244,11 @@ function displayChart(kit, elemSelf, sensor1, sensor2, rollup) {
   }
   sensor2DataStruct.reverse();
   // chart data
-  let chartData;
+  let chartData, secondValueUnit, showSecondValueUnit;
+  let sensorMainObj = kit.data.sensors.find(elem => elem.id === parseInt(sensor1.sensor_id));
+  let sensorMainUnit = sensorMainObj.unit;
+  let sensorSecondObj = kit.data.sensors.find(elem => elem.id === parseInt(sensor2.sensor_id));
+  let sensorSecondUnit = sensorSecondObj.unit;
   if (sensorSecond) {
     chartData = {
       datasets: [{
@@ -262,6 +266,8 @@ function displayChart(kit, elemSelf, sensor1, sensor2, rollup) {
         yAxisID: 'y1',
       }]
     }
+    secondValueUnit = sensorName(sensor2.sensor_key, sensor2.sensor_id) + ' ('+ sensorSecondUnit +')';
+    showSecondValueUnit = true;
   } else {
     chartData = {
       datasets: [{
@@ -272,6 +278,8 @@ function displayChart(kit, elemSelf, sensor1, sensor2, rollup) {
         yAxisID: 'y',
       }]
     }
+    secondValueUnit = '';
+    showSecondValueUnit = false;
   }
   let timeUnit;
   if (rollup <= 2) {
@@ -281,10 +289,6 @@ function displayChart(kit, elemSelf, sensor1, sensor2, rollup) {
   } else if (rollup >= 60) {
     timeUnit = 'month'
   }
-  let sensorMainObj = kit.data.sensors.find(elem => elem.id === parseInt(sensor1.sensor_id));
-  let sensorMainUnit = sensorMainObj.unit;
-  let sensorSecondObj = kit.data.sensors.find(elem => elem.id === parseInt(sensor2.sensor_id));
-  let sensorSecondUnit = sensorSecondObj.unit;
   const myChart = new Chart(chart, {
     type: 'line',
     data: chartData,
@@ -307,11 +311,11 @@ function displayChart(kit, elemSelf, sensor1, sensor2, rollup) {
         },
         y1: {
           type: 'linear',
-          display: true,
+          display: showSecondValueUnit,
           position: 'right',  
           title: {
             display: true,
-            text: sensorName(sensor2.sensor_key, sensor2.sensor_id) + ' ('+ sensorSecondUnit +')',
+            text: secondValueUnit,
           },
         },
         x: {
