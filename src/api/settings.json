@@ -68,7 +68,7 @@
     },
     {
       "id": "55",
-      "icon": "temperature-snow",
+      "icon": "temperature-half",
       "title": "Air temperature",
       "desc": "custom desc"
     },
