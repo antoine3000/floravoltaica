@@ -259,6 +259,8 @@ function displayChart(kit, elemSelf, sensor1, sensor2, rollup) {
         borderColor: sensorColor(sensor1.sensor_id),
         backgroundColor: sensorColor(sensor1.sensor_id),
         yAxisID: 'y',
+        tension: 0.2,
+        radius: 2
       },
       {
         label: sensorName(sensor2.sensor_key, sensor2.sensor_id),
@@ -266,9 +268,11 @@ function displayChart(kit, elemSelf, sensor1, sensor2, rollup) {
         borderColor: "#EF4444",
         backgroundColor: "#EF4444",
         yAxisID: 'y1',
+        tension: 0.2,
+        radius: 2
       }]
     }
-    secondValueUnit = sensorName(sensor2.sensor_key, sensor2.sensor_id) + ' ('+ sensorSecondUnit +')';
+    secondValueUnit = sensorName(sensor2.sensor_key, sensor2.sensor_id) +  ' ('+ sensorSecondUnit +')' + ' — Kit ' + sensor2.device_id;
     showSecondValueUnit = true;
   } else {
     chartData = {
@@ -278,6 +282,8 @@ function displayChart(kit, elemSelf, sensor1, sensor2, rollup) {
         borderColor: sensorColor(sensor1.sensor_id),
         backgroundColor: sensorColor(sensor1.sensor_id),
         yAxisID: 'y',
+        tension: 0.2,
+        radius: 2
       }]
     }
     secondValueUnit = '';
@@ -324,6 +330,13 @@ function displayChart(kit, elemSelf, sensor1, sensor2, rollup) {
           type: 'time',
           time: {
             unit: timeUnit,
+            tooltipFormat: 'MMM DD hh:mm',
+            displayFormats: {'day': 'MM/YY'}
+          },
+          ticks: {
+            major: {
+              enabled: true
+            }
           }
         }
       }
