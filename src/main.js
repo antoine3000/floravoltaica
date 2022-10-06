@@ -334,8 +334,13 @@ function displayChart(kit, elemSelf, sensor1, sensor2, rollup) {
             displayFormats: {'day': 'MM/YY'}
           },
           ticks: {
+            color: 'gray',
             major: {
-              enabled: true
+              enabled: true,
+            },
+            font: (context) => {
+              const boldedTicks = context.tick && context.tick.major ? 'bold' : '';
+              return {weight: boldedTicks}
             }
           }
         }
