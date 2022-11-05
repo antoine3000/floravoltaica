@@ -94,7 +94,7 @@ function select() {
   dataTitle.id = "data-title";
   dataTitle.innerHTML =
   `
-  <h1>Data visualization</h1>
+  <h1>Visualizacion de datos</h1>
   <label>Selecciona un intervalo de fechas</label>
   `;
   app.appendChild(dataTitle);
@@ -130,7 +130,7 @@ function displaySensorSection(kit, sensorId) {
   // select second sensor
   let selectLabel = document.createElement("label");
   selectLabel.classList.add('select__label');
-  selectLabel.innerHTML = `Select a sensor for comparison`;
+  selectLabel.innerHTML = `Selecciona una sensor para comparación`;
   infoSection.appendChild(selectLabel);
   let selectSection = document.createElement("section");
   selectSection.classList.add('sensor__select');
