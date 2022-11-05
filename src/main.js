@@ -130,13 +130,13 @@ function displaySensorSection(kit, sensorId) {
   // select second sensor
   let selectLabel = document.createElement("label");
   selectLabel.classList.add('select__label');
-  selectLabel.innerHTML = `Selecciona una sensor para comparación`;
+  selectLabel.innerHTML = `Selecciona un sensor para comparación`;
   infoSection.appendChild(selectLabel);
   let selectSection = document.createElement("section");
   selectSection.classList.add('sensor__select');
   infoSection.appendChild(selectSection);
   let select = document.createElement("select");
-  select.innerHTML = `<option value="">Select a sensor for comparison</option>`;
+  select.innerHTML = `<option value="">Selecciona un sensor para comparación</option>`;
 
   for (let i in Kits) {
     let optgroup = document.createElement('optgroup');
