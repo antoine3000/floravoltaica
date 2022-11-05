@@ -22,7 +22,7 @@ body {
   @apply px-4 md:px-12;
 }
 .header {
-  @apply pt-8 xl:pt-22 pb-6; 
+  @apply pt-8 xl:pt-12 pb-6; 
 }
 .header__logo {
   @apply block w-30 mb-4;
