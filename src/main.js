@@ -95,7 +95,7 @@ function select() {
   dataTitle.innerHTML =
   `
   <h1>Data visualization</h1>
-  <label>Select a date range</label>
+  <label>Selecciona un intervalo de fechas</label>
   `;
   app.appendChild(dataTitle);
   getDates(kit);
